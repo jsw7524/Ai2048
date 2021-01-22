@@ -33,49 +33,33 @@ class MergingQueue(object):
 
 class BoardOperator(object):
     def MoveDown(self, board):
-        newBoard = Board()
-        for c in range(0,4,1):
-            mergingQueue = MergingQueue()
-            for r in range(3, -1, -1):
-                mergingQueue.Append(board.title[r][c])
-            result=mergingQueue.Merging()
-            for r in range(3, -1, -1):
-                newBoard.title[r][c] = result.pop(0)
-        return newBoard
+        return self.Move(board,{'c':[0,4,1],'r':[3, -1, -1]},False)
 
     def MoveUp(self, board):
-        newBoard = Board()
-        for c in range(0,4,1):
-            mergingQueue = MergingQueue()
-            for r in range(0, 4, 1):
-                mergingQueue.Append(board.title[r][c])
-            result=mergingQueue.Merging()
-            for r in range(0, 4, 1):
-                newBoard.title[r][c] = result.pop(0)
-        return newBoard
+        return self.Move(board,{'c':[0,4,1],'r':[0, 4, 1]},False)        
 
     def MoveLeft(self, board):
-        newBoard = Board()
-        for c in range(0,4,1):
-            mergingQueue = MergingQueue()
-            for r in range(0, 4, 1):
-                mergingQueue.Append(board.title[c][r])
-            result=mergingQueue.Merging()
-            for r in range(0, 4, 1):
-                newBoard.title[c][r] = result.pop(0)
-        return newBoard
+        return self.Move(board,{'c':[0,4,1],'r':[0, 4, 1]},True)           
 
     def MoveRight(self, board):
-        newBoard = Board()
-        for c in range(0,4,1):
-            mergingQueue = MergingQueue()
-            for r in range(3, -1, -1):
-                mergingQueue.Append(board.title[c][r])
-            result=mergingQueue.Merging()
-            for r in range(3, -1, -1):
-                newBoard.title[c][r] = result.pop(0)
-        return newBoard
+        return self.Move(board,{'c':[0,4,1],'r':[3, -1, -1]},True)                
 
+    def Move(self, board, numberParameters, swap):
+        newBoard = Board()
+        for c in range(numberParameters['c'][0],numberParameters['c'][1],numberParameters['c'][2]):
+            mergingQueue = MergingQueue()
+            for r in range(numberParameters['r'][0], numberParameters['r'][1], numberParameters['r'][2]):
+                x,y=r,c
+                if True==swap:
+                    x,y=c,r
+                mergingQueue.Append(board.title[x][y])
+            result=mergingQueue.Merging()
+            for r in range(numberParameters['r'][0], numberParameters['r'][1], numberParameters['r'][2]):
+                x,y=r,c
+                if True==swap:
+                    x,y=c,r
+                newBoard.title[x][y] = result.pop(0)
+        return newBoard
 
 if __name__ == "__main__":
     case=1
