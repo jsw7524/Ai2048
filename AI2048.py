@@ -2,64 +2,33 @@ import time
 import unittest
 from Board import Board
 from WebOperator import WebOperator
+from BoardOperator import BoardOperator
 
+class EvaluateBoardSum(object):
+    def Evaluate(self, board):
+        titleSum=0;
+        for r in range(4):
+            for c in range(4):
+                v=board.title[r][c]
+                if v in [8,16,32]:
+                    titleSum += (1.5)*v
+                else:
+                    titleSum += v                  
+        return titleSum
+        
+class EvaluateBoardFirstRowFull(object):
+    def Evaluate(self, board):
+        v=board.title[0][0]+board.title[0][1]+board.title[0][2]+board.title[0][3]
+        return (1.5)*v if board.title[0][0] > 0 and board.title[0][1] > 0 and board.title[0][2] > 0 and board.title[0][3] > 0 else 0        
 
-class MergingQueue(object):
-    def __init__(self):
-        self.buffer = []
-
-    def Append(self, x):
-        if 0 == x:
-            return
-        self.buffer.append(x)
-
-    def Merging(self):
-        self.FillZero(self.buffer,5)
-        result=[]
-        while len(self.buffer) >= 2:
-            if self.buffer[0] == self.buffer[1]:
-                result.append(2*self.buffer[0])
-                self.buffer.pop(0)
-                self.buffer.pop(0)
-            else:
-                result.append(self.buffer[0])
-                self.buffer.pop(0)
-        self.FillZero(result, 4)
-        return result
-
-    def FillZero(self,lst,n):
-        while len(lst) < n:
-            lst.append(0)
-
-class BoardOperator(object):
-    def MoveDown(self, board):
-        return self.Move(board,{'c':[0,4,1],'r':[3, -1, -1]},False)
-
-    def MoveUp(self, board):
-        return self.Move(board,{'c':[0,4,1],'r':[0, 4, 1]},False)        
-
-    def MoveLeft(self, board):
-        return self.Move(board,{'c':[0,4,1],'r':[0, 4, 1]},True)           
-
-    def MoveRight(self, board):
-        return self.Move(board,{'c':[0,4,1],'r':[3, -1, -1]},True)                
-
-    def Move(self, board, numberParameters, swap):
-        newBoard = Board()
-        for c in range(numberParameters['c'][0],numberParameters['c'][1],numberParameters['c'][2]):
-            mergingQueue = MergingQueue()
-            for r in range(numberParameters['r'][0], numberParameters['r'][1], numberParameters['r'][2]):
-                x,y=r,c
-                if True==swap:
-                    x,y=c,r
-                mergingQueue.Append(board.title[x][y])
-            result=mergingQueue.Merging()
-            for r in range(numberParameters['r'][0], numberParameters['r'][1], numberParameters['r'][2]):
-                x,y=r,c
-                if True==swap:
-                    x,y=c,r
-                newBoard.title[x][y] = result.pop(0)
-        return newBoard
+class EvaluateBoardMaxCorner(object):
+    def Evaluate(self, board):
+        titleMax=board.title[0][0];
+        for r in range(4):
+            for c in range(4):
+                if titleMax < board.title[r][c]:
+                    return 0
+        return (1.5)*titleMax
 
 if __name__ == "__main__":
     case=1
@@ -68,156 +37,61 @@ if __name__ == "__main__":
                         [0, 0, 0, 0],
                         [0, 2, 0, 0],
                         [0, 2, 0, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveDown(testBoard)
-    assert result.title==[[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 4, 0, 0]]
+    evaluateBoardSum=EvaluateBoardSum()
+    result=evaluateBoardSum.Evaluate(testBoard)
+    assert 4==result  
     case=2
     testBoard = Board()
-    testBoard.SetBoard([[0, 0, 4, 0],
-                        [0, 2, 0, 0],
+    testBoard.SetBoard([[0, 8, 0, 0],
                         [0, 0, 0, 0],
-                        [0, 2, 0, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveDown(testBoard)
-    assert result.title==[[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 4, 4, 0]]
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0]])
+    evaluateBoardSum=EvaluateBoardSum()
+    result=evaluateBoardSum.Evaluate(testBoard)
+    assert 12==result      
     case=3
     testBoard = Board()
-    testBoard.SetBoard([[0, 0, 4, 0],
-                        [0, 2, 0, 0],
-                        [0, 0, 2, 0],
+    testBoard.SetBoard([[0, 8, 0, 0],
+                        [0, 0, 0, 0],
+                        [0, 2, 0, 64],
                         [0, 2, 0, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveDown(testBoard)
-    assert result.title==[[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 4, 0],[0, 4, 2, 0]]
+    evaluateBoardSum=EvaluateBoardSum()
+    result=evaluateBoardSum.Evaluate(testBoard)
+    assert 80==result  
     case=4
     testBoard = Board()
-    testBoard.SetBoard([[0, 0, 4, 0],
-                        [0, 2, 0, 0],
-                        [0, 2, 2, 0],
-                        [0, 2, 0, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveDown(testBoard)
-    assert result.title==[[0, 0, 0, 0],[0, 0, 0, 0],[0, 2, 4, 0],[0, 4, 2, 0]]
+    testBoard.SetBoard([[2, 0, 4, 2],
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0]])
+    evaluateBoardFirstRowFull=EvaluateBoardFirstRowFull()
+    result=evaluateBoardFirstRowFull.Evaluate(testBoard)
+    assert 0==result     
     case=5
     testBoard = Board()
-    testBoard.SetBoard([[0, 2, 0, 0],
-                        [0, 2, 0, 0],
-                        [0, 2, 0, 0],
-                        [0, 2, 0, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveDown(testBoard)
-    assert result.title==[[0, 0, 0, 0],[0, 0, 0, 0],[0, 4, 0, 0],[0, 4, 0, 0]]
+    testBoard.SetBoard([[2, 4, 4, 2],
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0]])
+    evaluateBoardFirstRowFull=EvaluateBoardFirstRowFull()
+    result=evaluateBoardFirstRowFull.Evaluate(testBoard)
+    assert 18==result 
     case=6
     testBoard = Board()
-    testBoard.SetBoard([[0, 0, 4, 0],
-                        [0, 0, 2, 0],
-                        [0, 0, 2, 0],
-                        [0, 0, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveDown(testBoard)
-    assert result.title==[[0, 0, 0, 0],
-                          [0, 0, 4, 0],
-                          [0, 0, 4, 0],
-                          [0, 0, 4, 0]]
-    case=7
+    testBoard.SetBoard([[64, 4, 4, 2],
+                        [0, 0, 0, 0],
+                        [0, 0, 64, 0],
+                        [0, 0, 0, 0]])
+    evaluateBoardMaxCorner=EvaluateBoardMaxCorner()
+    result=evaluateBoardMaxCorner.Evaluate(testBoard)
+    assert 96==result   
+    case=6
     testBoard = Board()
-    testBoard.SetBoard([[0, 0, 4, 0],
-                        [0, 0, 2, 0],
-                        [0, 0, 2, 0],
-                        [0, 0, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveUp(testBoard)
-    assert result.title==[[0, 0, 4, 0],
-                          [0, 0, 4, 0],
-                          [0, 0, 4, 0],
-                          [0, 0, 0, 0]]
-
-    case=8
-    testBoard = Board()
-    testBoard.SetBoard([[0, 0, 0, 2],
-                        [2, 0, 0, 0],
-                        [2, 2, 0, 0],
-                        [0, 0, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveUp(testBoard)
-    assert result.title==[[4, 2, 4, 2],
-                          [0, 0, 0, 0],
-                          [0, 0, 0, 0],
-                          [0, 0, 0, 0]]
-    case=9
-    testBoard = Board()
-    testBoard.SetBoard([[0, 4, 0, 2],
-                        [2, 4, 4, 8],
-                        [2, 2, 8, 0],
-                        [2, 2, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveUp(testBoard)
-    assert result.title==[[4, 8, 4, 2],
-                          [2, 4, 8, 8],
-                          [0, 0, 4, 0],
-                          [0, 0, 0, 0]]
-    case=10
-    testBoard = Board()
-    testBoard.SetBoard([[0, 0, 0, 2],
-                        [2, 0, 0, 0],
-                        [2, 2, 0, 0],
-                        [0, 0, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveLeft(testBoard)
-    assert result.title==[[2, 0, 0, 0],
-                          [2, 0, 0, 0],
-                          [4, 0, 0, 0],
-                          [4, 0, 0, 0]]
-
-    case=11
-    testBoard = Board()
-    testBoard.SetBoard([[2, 2, 2, 2],
-                        [2, 0, 2, 0],
-                        [2, 2, 0, 2],
-                        [0, 4, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveLeft(testBoard)
-    assert result.title==[[4, 4, 0, 0],
-                          [4, 0, 0, 0],
-                          [4, 2, 0, 0],
-                          [8, 0, 0, 0]]
-    case=12
-    testBoard = Board()
-    testBoard.SetBoard([[0, 0, 0, 2],
-                        [2, 0, 0, 0],
-                        [2, 2, 0, 0],
-                        [0, 0, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveRight(testBoard)
-    assert result.title==[[0, 0, 0, 2],
-                          [0, 0, 0, 2],
-                          [0, 0, 0, 4],
-                          [0, 0, 0, 4]]
-
-    case=13
-    testBoard = Board()
-    testBoard.SetBoard([[2, 2, 2, 2],
-                        [2, 0, 2, 0],
-                        [2, 2, 0, 2],
-                        [0, 4, 4, 0]])
-
-    boardOperator=BoardOperator()
-    result=boardOperator.MoveRight(testBoard)
-    assert result.title==[[0, 0, 4, 4],
-                          [0, 0, 0, 4],
-                          [0, 0, 2, 4],
-                          [0, 0, 0, 8]]
-
+    testBoard.SetBoard([[64, 4, 4, 0],
+                        [0, 0, 0, 0],
+                        [0, 0, 128, 0],
+                        [0, 0, 0, 0]])
+    evaluateBoardMaxCorner=EvaluateBoardMaxCorner()
+    result=evaluateBoardMaxCorner.Evaluate(testBoard)
+    assert 0==result      
     case=99999
