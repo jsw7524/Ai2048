@@ -9,7 +9,7 @@ if __name__ == "__main__":
     webOperator = WebOperator()
     sovler=Sovler2048()
     while ("Game over!" not in webOperator.chrome.page_source):
-        time.sleep(1)
+        time.sleep(0.1)
         board=webOperator.GetBoardInfo()
         m=sovler.NextMove(board)
         webOperator.Move(m)

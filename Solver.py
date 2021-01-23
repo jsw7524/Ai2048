@@ -1,11 +1,12 @@
 from BoardOperator import BoardOperator
-from Evaluater import EvaluateBoardSum, EvaluateBoardFirstRowFull, EvaluateBoardMaxCorner, EvaluateBoardFirstRowOrdered
+from Evaluater import EvaluateBoardSum, EvaluateBoardFirstRowFull, EvaluateBoardMaxCorner, EvaluateBoardFirstRowOrdered, \
+    EvaluateBoardFirstColumnOrdered, EvaluateBoardTitleNumber
 
 
 class Sovler2048(object):
     def __init__(self):
         self.boardOperator = BoardOperator()
-        self.Evaluaters=[EvaluateBoardSum(),EvaluateBoardFirstRowFull(),EvaluateBoardFirstRowOrdered(),EvaluateBoardMaxCorner()]
+        self.Evaluaters=[EvaluateBoardSum(),EvaluateBoardFirstRowFull(),EvaluateBoardFirstRowOrdered(),EvaluateBoardFirstColumnOrdered(),EvaluateBoardMaxCorner(),EvaluateBoardTitleNumber()]
 
     def NextMove(self,board):
         boardsFuture = [("UP",self.boardOperator.MoveUp(board)),("DOWN",self.boardOperator.MoveDown(board)),("LEFT",self.boardOperator.MoveLeft(board)),("RIGHT",self.boardOperator.MoveRight(board))]
