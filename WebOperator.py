@@ -32,10 +32,9 @@ class WebOperator(object):
                 misc = str(matches.group("misc"))
                 if "tile-new" == misc:
                     self.newNum[int(matches.group("num"))] += 1
-            print(misc)
+            # print(misc)
             board.title[int(matches.group("py")) - 1][int(matches.group("px")) - 1] = int(matches.group("num"))
-            i = 1
-        print(self.newNum)
+        return board
 
     def RandomMove(self):
         d = random.randint(0, 4)
@@ -47,6 +46,17 @@ class WebOperator(object):
         elif (2 == d):
             actions.send_keys(Keys.ARROW_LEFT).perform()
         elif (3 == d):
+            actions.send_keys(Keys.ARROW_RIGHT).perform()
+
+    def Move(self,cmd):
+        actions = ActionChains(self.chrome)
+        if ("UP" == cmd):
+            actions.send_keys(Keys.ARROW_UP).perform()
+        elif ("DOWN" == cmd):
+            actions.send_keys(Keys.ARROW_DOWN).perform()
+        elif ("LEFT" == cmd):
+            actions.send_keys(Keys.ARROW_LEFT).perform()
+        elif ("RIGHT" == cmd):
             actions.send_keys(Keys.ARROW_RIGHT).perform()
 
         #
