@@ -1,11 +1,11 @@
 from BoardOperator import BoardOperator
-from Evaluater import EvaluateBoardSum, EvaluateBoardFirstRowFull, EvaluateBoardMaxCorner
+from Evaluater import EvaluateBoardSum, EvaluateBoardFirstRowFull, EvaluateBoardMaxCorner, EvaluateBoardFirstRowOrdered
 
 
 class Sovler2048(object):
     def __init__(self):
         self.boardOperator = BoardOperator()
-        self.Evaluaters=[EvaluateBoardSum(),EvaluateBoardFirstRowFull(),EvaluateBoardMaxCorner()]
+        self.Evaluaters=[EvaluateBoardSum(),EvaluateBoardFirstRowFull(),EvaluateBoardFirstRowOrdered(),EvaluateBoardMaxCorner()]
 
     def NextMove(self,board):
         boardsFuture = [("UP",self.boardOperator.MoveUp(board)),("DOWN",self.boardOperator.MoveDown(board)),("LEFT",self.boardOperator.MoveLeft(board)),("RIGHT",self.boardOperator.MoveRight(board))]
@@ -32,6 +32,8 @@ class Sovler2048(object):
                             b.title[r][c]=2
                             scores.append(self.DFS(b,depth+1))
                             b.title[r][c]=0
+            if 0==len(scores):
+                return 0
             return sum(scores) / len(scores)
         else:
             score=0
