@@ -4,21 +4,6 @@ from Board import Board
 class EvaluateBoardSum(object):
     def Evaluate(self, board):
         titleSum=0;
-        tmp=0
-        n=0
-        for r in range(4):
-            for c in range(4):
-                if board.title[r][c] > 0:
-                    tmp+=board.title[r][c]
-                    n+=1
-        avg=tmp/n
-        for r in range(4):
-            for c in range(4):
-                v=board.title[r][c]
-                if avg <= v <= 2*avg :
-                    titleSum += (1.5)*v
-                else:
-                    titleSum += v
         return titleSum
 
 class EvaluateBoardTitleNumber(object):
@@ -28,32 +13,41 @@ class EvaluateBoardTitleNumber(object):
             for c in range(4):
                 if board.title[r][c] > 0:
                     n+=1
-        return -1*pow(1.5,n)
+        return -1*pow(1.7,n)
 
 class EvaluateBoardFirstRowFull(object):
     def Evaluate(self, board):
         v=board.title[0][0]+board.title[0][1]+board.title[0][2]+board.title[0][3]
-        return (1)*v if board.title[0][0] > 0 and board.title[0][1] > 0 and board.title[0][2] > 0 and board.title[0][3] > 0 else 0
+        return v if board.title[0][0] >0 and board.title[0][1] >0 and board.title[0][2] >0 and board.title[0][3] > 0 else 0
 
 class EvaluateBoardFirstRowOrdered(object):
     def Evaluate(self, board):
-        v=board.title[0][0] + board.title[0][1] + board.title[0][2]
-        return (1.5)*v if board.title[0][0] >= board.title[0][1] >= board.title[0][2]  > 0 else 0
+        penalty=0
+        for r in range(4):
+            for c in range(4):
+                if board.title[r][c] >= board.title[0][0]:
+                    if not (r==0 and c==0):
+                        return -2**10
+        for r in range(4):
+            for c in range(4):
+                if board.title[r][c] > 0:
+                    penalty+=(r+c)*(board.title[0][0]-board.title[r][c])
+        return (-1)*penalty
 
 class EvaluateBoardFirstColumnOrdered(object):
     def Evaluate(self, board):
         return 0
-        # v=board.title[0][0] + board.title[1][0] + board.title[2][0]
-        # return (1.5)*v if board.title[0][0] >= board.title[1][0] >= board.title[2][0]  > 0 else 0
+        # v=board.title[0][0]+board.title[1][0]+board.title[2][0]+board.title[3][0]
+        # return (1)*v if board.title[0][0] > 0 and board.title[1][0] > 0 and board.title[2][0] > 0 and board.title[3][0] > 0 else 0
 
 class EvaluateBoardMaxCorner(object):
     def Evaluate(self, board):
-        titleMax=board.title[0][0];
+        titleMax=board.title[0][0]
         for r in range(4):
             for c in range(4):
                 if titleMax < board.title[r][c]:
-                    return 0
-        return (3)*titleMax
+                    return -2**10
+        return 10*titleMax
 
 if __name__ == "__main__":
     case=1
