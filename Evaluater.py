@@ -13,7 +13,7 @@ class EvaluateBoardTitleNumber(object):
             for c in range(4):
                 if board.title[r][c] > 0:
                     n+=1
-        return -1*pow(1.7,n)
+        return -1*pow(2,n)
 
 class EvaluateBoardFirstRowFull(object):
     def Evaluate(self, board):
@@ -25,13 +25,13 @@ class EvaluateBoardFirstRowOrdered(object):
         penalty=0
         for r in range(4):
             for c in range(4):
-                if board.title[r][c] >= board.title[0][0]:
+                if board.title[r][c] > board.title[0][0]:
                     if not (r==0 and c==0):
-                        return -2**10
+                        return -(2**20)
         for r in range(4):
             for c in range(4):
                 if board.title[r][c] > 0:
-                    penalty+=(r+c)*(board.title[0][0]-board.title[r][c])
+                    penalty+=10*(r+c)*abs(board.title[0][0]-board.title[r][c])
         return (-1)*penalty
 
 class EvaluateBoardFirstColumnOrdered(object):
@@ -43,11 +43,12 @@ class EvaluateBoardFirstColumnOrdered(object):
 class EvaluateBoardMaxCorner(object):
     def Evaluate(self, board):
         titleMax=board.title[0][0]
+        counter=0
         for r in range(4):
             for c in range(4):
                 if titleMax < board.title[r][c]:
-                    return -2**10
-        return 10*titleMax
+                    counter+=1
+        return 2**20 if counter ==0 else -(2**20)
 
 if __name__ == "__main__":
     case=1
