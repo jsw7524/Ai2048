@@ -12,10 +12,24 @@ from Board import Board
 class WebOperator(object):
     def __init__(self):
         options = Options()
-        options.add_argument("--disable-notifications")
+        options.add_argument("--disable-notifications")#--headless
         self.chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
         self.chrome.get("https://play2048.co/")
         self.newNum = {2: 0, 4: 0}
+        
+    def IsGameOver(self):
+        isGameOver=self.chrome.find_elements_by_css_selector(".game-over")
+        return True if len(isGameOver)>0 else False        
+
+    def ResetGame(self):
+        restartButton=self.chrome.find_element_by_css_selector(".restart-button")
+        restartButton.click()
+
+    def GetScore(self):
+        scoreInfo = self.chrome.find_element_by_css_selector(".score-container")
+        matches = re.match(r".*", scoreInfo.text)
+        return (matches.group(0))        
+
 
     def GetRawInfo(self):
         rawInfo = self.chrome.find_elements_by_css_selector(".tile-container .tile")
